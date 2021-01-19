@@ -72,14 +72,33 @@ public class MainActivity extends AppCompatActivity {
                                    // }
                                     tv.setText(
                                             orientation_values[0]
-                                                    + " , " + orientation_values[1] +" , "
+                                                    + " , " + orientation_values[1]
                                                     + " , " + orientation_values[2]);
                                 }
 
+                                //call invalidate from the other class
 
 
 
                             }, sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
                 SensorManager.SENSOR_DELAY_UI);
     }
+
+    public float[] getBearings(){
+         //float[] bearings = new float[500];
+        return bearings.clone();
+    }
+
+    public float[] getPitch(){
+        //float[] pitch = new float[500];
+        return pitch.clone();
+    }
+
+    public float[] getRoll(){
+        //float[] bearings = new float[500];
+        return roll.clone();
+    }
+
+
+
 }
