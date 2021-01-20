@@ -20,6 +20,9 @@ import androidx.annotation.Nullable;
 
 import org.w3c.dom.Text;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static android.content.Context.SENSOR_SERVICE;
 
 public class portraitView extends View {
@@ -171,20 +174,23 @@ public class portraitView extends View {
                 }
             }
         }
+//IF DEVICE IS FACING FRONT VIEW
+      //  canvas.drawRect(250,(float)(375-10),485,(float)(375+10),black);
+        canvas.drawRect(width/(float)2.85,(float)(375-10),width/(float)1.5,(float)(375+10),black);
+        //Log.d("mylog2", "onDraw: "+width/(float)2.85);
 
-        canvas.drawRect(100,(float)(375-10),650,(float)(375+10),black);
-
-        canvas.drawCircle(375, 375, (float)2.5,textPaint);
+      //  canvas.drawCircle(375, 375, (float)3.0,textPaint);
         canvas.translate(0,0);
         arrSTr = text.split(",");
        // drawText(canvas, sqrHeight, sqrHeight);
+        //Log.d("mylog", "onDraw: "+ width+" "+height );
 
-      double  pitch = 700- Double.parseDouble(arrSTr[1]);
-//        pitch = (float) Math.min(MAX_DEGREE+375, pitch);
-//        pitch = (float) Math.max(375, pitch);
+      double  pitch = round(Double.parseDouble(arrSTr[2]),3)+width/(float)1.95;
+        pitch = (float) Math.max(MIN_DEGREE+(width/(float)1.95), pitch);
+        pitch = (float) Math.min((width/(float)1.95)+MAX_DEGREE, pitch);
         Log.d("mytag3", "onDraw: "+pitch);
         //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
-        canvas.drawCircle(60, (float) pitch, 5,textPaint);
+        canvas.drawCircle((float) pitch, 365, (float)15,white);
         invalidate();
 
 //        do {
@@ -196,6 +202,7 @@ public class portraitView extends View {
 //        } while (altrue);
 
 
+        //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE THAT IS, WHEN BOTH X AND Y ARE 0
 
     }
 
@@ -208,6 +215,16 @@ public class portraitView extends View {
 
         return super.onTouchEvent(event);
     }
+
+
+
+        public static double round(double val, int places){
+            if(places < 0) throw new IllegalArgumentException();
+
+            BigDecimal bigDecimal = new BigDecimal(val);
+            bigDecimal = bigDecimal.setScale(places, RoundingMode.HALF_UP);
+            return bigDecimal.doubleValue();
+        }
 
 
 
