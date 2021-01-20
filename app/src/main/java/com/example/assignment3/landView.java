@@ -164,20 +164,36 @@ public class landView extends View {
         }
 
 //IF DEVICE IS FACING FRONT VIEW
-        canvas.drawRect(height/(float)2.8,(float)(250-10),height/(float)1.6,(float)(250+10),black);
+        canvas.drawRect(height/(float)2.5,(float)(250-10),height/(float)1.7,(float)(250+10),black);
 
     //  canvas.drawCircle(375, 375, (float)3.0,textPaint);
         canvas.translate(0,0);
     arrSTr = text.split(",");
     // drawText(canvas, sqrHeight, sqrHeight);
 
-    double  pitch = height/(float)1.85 - round(Double.parseDouble(arrSTr[0]),3);
-        Log.d("mylog3", "onDraw: "+height/(float)2.8 +" "+height/(float)1.6);
-    pitch = (float) Math.max(((height/(float)1.85 - round(Double.parseDouble(arrSTr[0]),3))+MIN_DEGREE), pitch);
-    pitch = (float) Math.min(((height/(float)1.85 - round(Double.parseDouble(arrSTr[0]),3))+MAX_DEGREE), pitch);
-        Log.d("mytag3", "onDraw: "+pitch);
+    double  pitch = height/(float)1.85 - round(Double.parseDouble(arrSTr[0]),6);
+    int deg =(int)calcDeg(round(Double.parseDouble(arrSTr[0]),2));
+        Log.d("mylog5", "onDraw: "+deg);
+        Log.d("mylog3", "onDraw: "+round(height/(float)1.85,2));
+        if (((int)round(Double.parseDouble(arrSTr[0]),1) < 80)){
+            pitch = (height/(float)1.85) - 80;
+            canvas.drawCircle((float) pitch, 240, (float)15,white);
+            Log.d("mytag3", "onDraw: "+pitch);
+            invalidate();
+        }
+
+        else if (((int)round(Double.parseDouble(arrSTr[0]),1) > 100)){
+
+            pitch = (height/(float)1.85) - 100;
+            canvas.drawCircle((float) pitch, 240, (float)15,white);
+            Log.d("mytag3", "onDraw: "+round(pitch,2));
+            invalidate();
+        }
+//    pitch = (float) Math.max(height/(float)2.06-MIN_DEGREE, pitch);
+//    pitch = (float) Math.min((height/(float)2.06)+20, pitch);
+        Log.d("mytag3", "onDraw: "+round(pitch,2));
     //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
-        canvas.drawCircle((float) pitch, 240, (float)15,textPaint);
+        canvas.drawCircle((float) pitch, 240, (float)15,white);
     invalidate();
 
 //        do {
@@ -192,6 +208,12 @@ public class landView extends View {
     //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE THAT IS, WHEN BOTH X AND Y ARE 0
 
 }
+
+    private double calcDeg(double round) {
+        double res;
+                res = 90 - round;
+        return res;
+    }
 
     private void drawText(Canvas canvas, float i, float j) {
         canvas.drawText(text, i, j, textPaint);
