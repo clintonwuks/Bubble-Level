@@ -128,7 +128,7 @@ public class portraitView extends View {
 
         int sqrHeight = width / 8;
         int sqrWidth = height / 8;
-        Log.d("sqrtings", "onDraw: "+ sqrHeight);
+       // Log.d("sqrtings", "onDraw: "+ sqrHeight);
 
 
        // this.canvas = canvas;
@@ -185,10 +185,11 @@ public class portraitView extends View {
        // drawText(canvas, sqrHeight, sqrHeight);
         //Log.d("mylog", "onDraw: "+ width+" "+height );
 
-      double  pitch = round(Double.parseDouble(arrSTr[2]),3)+width/(float)1.95;
-        pitch = (float) Math.max(MIN_DEGREE+(width/(float)1.95), pitch);
-        pitch = (float) Math.min((width/(float)1.95)+MAX_DEGREE, pitch);
-        Log.d("mytag3", "onDraw: "+pitch);
+      double  pitch = width/(float)2-round(Double.parseDouble(arrSTr[2]),3);
+       // Log.d("mylog4", "onDraw: "+width/(float)2);
+        pitch = (float) Math.max(MIN_DEGREE+(width/(float)2), pitch);
+        pitch = (float) Math.min((width/(float)2)+MAX_DEGREE, pitch);
+       // Log.d("mytag3", "onDraw: "+pitch);
         //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
         canvas.drawCircle((float) pitch, 365, (float)15,white);
         invalidate();

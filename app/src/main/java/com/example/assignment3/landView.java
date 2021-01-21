@@ -171,27 +171,27 @@ public class landView extends View {
     arrSTr = text.split(",");
     // drawText(canvas, sqrHeight, sqrHeight);
 
-    double  pitch = height/(float)1.85 - round(Double.parseDouble(arrSTr[0]),6);
-    int deg =(int)calcDeg(round(Double.parseDouble(arrSTr[0]),2));
-        Log.d("mylog5", "onDraw: "+deg);
-        Log.d("mylog3", "onDraw: "+round(height/(float)1.85,2));
+    double  pitch = height/(float)2.22 + round(Double.parseDouble(arrSTr[0]),6);
+   // int deg =(int)calcDeg(round(Double.parseDouble(arrSTr[0]),2));
+       // Log.d("mylog5", "onDraw: "+deg);
+        //Log.d("mylog3", "onDraw: "+round(height/(float)2.22,2));
         if (((int)round(Double.parseDouble(arrSTr[0]),1) < 80)){
-            pitch = (height/(float)1.85) - 80;
+            pitch = (height/(float)2.22) + 80;
             canvas.drawCircle((float) pitch, 240, (float)15,white);
-            Log.d("mytag3", "onDraw: "+pitch);
+           // Log.d("mytag3", "onDraw: "+pitch);
             invalidate();
         }
 
         else if (((int)round(Double.parseDouble(arrSTr[0]),1) > 100)){
 
-            pitch = (height/(float)1.85) - 100;
+            pitch = (height/(float)2.22) + 100;
             canvas.drawCircle((float) pitch, 240, (float)15,white);
-            Log.d("mytag3", "onDraw: "+round(pitch,2));
+           // Log.d("mytag3", "onDraw: "+round(pitch,2));
             invalidate();
         }
 //    pitch = (float) Math.max(height/(float)2.06-MIN_DEGREE, pitch);
 //    pitch = (float) Math.min((height/(float)2.06)+20, pitch);
-        Log.d("mytag3", "onDraw: "+round(pitch,2));
+      //  Log.d("mytag3", "onDraw: "+round(pitch,2));
     //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
         canvas.drawCircle((float) pitch, 240, (float)15,white);
     invalidate();
