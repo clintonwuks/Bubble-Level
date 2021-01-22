@@ -21,7 +21,7 @@ import java.math.RoundingMode;
 import static android.content.Context.SENSOR_SERVICE;
 
 public class landView extends View {
-    private Paint white, black;
+    private Paint white, black, green;
     private Rect square;
     private int width, height;
     private String text;
@@ -62,9 +62,12 @@ public class landView extends View {
         white = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         black = new Paint(Paint.ANTI_ALIAS_FLAG);
+        green = new Paint(Paint.ANTI_ALIAS_FLAG);
+
         white.setColor(0xFF7C7B7B);
         textPaint.setColor(0xFFFFFFFF);
         black.setColor(0xFF000000);
+        green.setColor(0xFF95DD42);
 
         mObj = new MainActivity();
         bearingArr = mObj.getBearings();
@@ -164,37 +167,36 @@ public class landView extends View {
         }
 
 //IF DEVICE IS FACING FRONT VIEW
-        canvas.drawRect(height/(float)2.5,(float)(250-10),height/(float)1.7,(float)(250+10),black);
+        if (calcDeg(orientation_values[2]) >= 90) {
+            canvas.drawRect(height / (float) 2.5, (float) (250 - 10), height / (float) 1.7, (float) (250 + 10), black);
 
-    //  canvas.drawCircle(375, 375, (float)3.0,textPaint);
-        canvas.translate(0,0);
-    arrSTr = text.split(",");
-    // drawText(canvas, sqrHeight, sqrHeight);
+            //  canvas.drawCircle(375, 375, (float)3.0,textPaint);
+            canvas.translate(0, 0);
+            arrSTr = text.split(",");
+            // drawText(canvas, sqrHeight, sqrHeight);
 
-    double  pitch = height/(float)2.22 + round(Double.parseDouble(arrSTr[0]),6);
-   // int deg =(int)calcDeg(round(Double.parseDouble(arrSTr[0]),2));
-       // Log.d("mylog5", "onDraw: "+deg);
-        //Log.d("mylog3", "onDraw: "+round(height/(float)2.22,2));
-        if (((int)round(Double.parseDouble(arrSTr[0]),1) < 80)){
-            pitch = (height/(float)2.22) + 80;
-            canvas.drawCircle((float) pitch, 240, (float)15,white);
-           // Log.d("mytag3", "onDraw: "+pitch);
-            invalidate();
-        }
+            double pitch = height / (float) 2.22 + round(Double.parseDouble(arrSTr[0]), 6);
+            // int deg =(int)calcDeg(round(Double.parseDouble(arrSTr[0]),2));
+            // Log.d("mylog5", "onDraw: "+deg);
+            //Log.d("mylog3", "onDraw: "+round(height/(float)2.22,2));
+            if (((int) round(Double.parseDouble(arrSTr[0]), 1) < 80)) {
+                pitch = (height / (float) 2.22) + 80;
+                canvas.drawCircle((float) pitch, 240, (float) 15, white);
+                // Log.d("mytag3", "onDraw: "+pitch);
+                invalidate();
+            } else if (((int) round(Double.parseDouble(arrSTr[0]), 1) > 100)) {
 
-        else if (((int)round(Double.parseDouble(arrSTr[0]),1) > 100)){
-
-            pitch = (height/(float)2.22) + 100;
-            canvas.drawCircle((float) pitch, 240, (float)15,white);
-           // Log.d("mytag3", "onDraw: "+round(pitch,2));
-            invalidate();
-        }
+                pitch = (height / (float) 2.22) + 100;
+                canvas.drawCircle((float) pitch, 240, (float) 15, white);
+                // Log.d("mytag3", "onDraw: "+round(pitch,2));
+                invalidate();
+            }
 //    pitch = (float) Math.max(height/(float)2.06-MIN_DEGREE, pitch);
 //    pitch = (float) Math.min((height/(float)2.06)+20, pitch);
-      //  Log.d("mytag3", "onDraw: "+round(pitch,2));
-    //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
-        canvas.drawCircle((float) pitch, 240, (float)15,white);
-    invalidate();
+            //  Log.d("mytag3", "onDraw: "+round(pitch,2));
+            //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
+            canvas.drawCircle((float) pitch, 240, (float) 15, white);
+            invalidate();
 
 //        do {
 //            //tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
@@ -205,13 +207,21 @@ public class landView extends View {
 //        } while (altrue);
 
 
-    //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE THAT IS, WHEN BOTH X AND Y ARE 0
+            //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE THAT IS, WHEN BOTH X AND Y ARE 0
+
+        }else
+        {
+
+            canvas.drawCircle(height / (float) 2, width / (float) 2.0,  300, green);
+            canvas.translate(0, 0);
+            canvas.drawCircle(height / (float) 2.0, width / (float) 2.0, 50, white);
+        }
 
 }
 
     private double calcDeg(double round) {
         double res;
-                res = 90 - round;
+                res = 90 + round;
         return res;
     }
 

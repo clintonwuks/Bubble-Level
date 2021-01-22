@@ -26,7 +26,7 @@ import java.math.RoundingMode;
 import static android.content.Context.SENSOR_SERVICE;
 
 public class portraitView extends View {
-    private Paint white, black;
+    private Paint white, black, green;
     private Rect square;
     private int width, height;
     private String text;
@@ -66,9 +66,11 @@ public class portraitView extends View {
         white = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         black = new Paint(Paint.ANTI_ALIAS_FLAG);
+        green = new Paint(Paint.ANTI_ALIAS_FLAG);
         white.setColor(0xFF7C7B7B);
         textPaint.setColor(0xFFFFFFFF);
         black.setColor(0xFF000000);
+        green.setColor(0xFF95DD42);
 
         mObj = new MainActivity();
         bearingArr = mObj.getBearings();
@@ -176,23 +178,26 @@ public class portraitView extends View {
         }
 //IF DEVICE IS FACING FRONT VIEW
       //  canvas.drawRect(250,(float)(375-10),485,(float)(375+10),black);
-        canvas.drawRect(width/(float)2.85,(float)(375-10),width/(float)1.5,(float)(375+10),black);
-        //Log.d("mylog2", "onDraw: "+width/(float)2.85);
+        if (calcDeg(orientation_values[1]) < 90) {
 
-      //  canvas.drawCircle(375, 375, (float)3.0,textPaint);
-        canvas.translate(0,0);
-        arrSTr = text.split(",");
-       // drawText(canvas, sqrHeight, sqrHeight);
-        //Log.d("mylog", "onDraw: "+ width+" "+height );
 
-      double  pitch = width/(float)2-round(Double.parseDouble(arrSTr[2]),3);
-       // Log.d("mylog4", "onDraw: "+width/(float)2);
-        pitch = (float) Math.max(MIN_DEGREE+(width/(float)2), pitch);
-        pitch = (float) Math.min((width/(float)2)+MAX_DEGREE, pitch);
-       // Log.d("mytag3", "onDraw: "+pitch);
-        //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
-        canvas.drawCircle((float) pitch, 365, (float)15,white);
-        invalidate();
+            canvas.drawRect(width / (float) 2.85, (float) (375 - 10), width / (float) 1.5, (float) (375 + 10), black);
+            //Log.d("mylog2", "onDraw: "+width/(float)2.85);
+
+            //  canvas.drawCircle(375, 375, (float)3.0,textPaint);
+            canvas.translate(0, 0);
+            arrSTr = text.split(",");
+            // drawText(canvas, sqrHeight, sqrHeight);
+            //Log.d("mylog", "onDraw: "+ width+" "+height );
+
+            double pitch = width / (float) 2 - round(Double.parseDouble(arrSTr[2]), 3);
+            // Log.d("mylog4", "onDraw: "+width/(float)2);
+            pitch = (float) Math.max(MIN_DEGREE + (width / (float) 2), pitch);
+            pitch = (float) Math.min((width / (float) 2) + MAX_DEGREE, pitch);
+            // Log.d("mytag3", "onDraw: "+pitch);
+            //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
+            canvas.drawCircle((float) pitch, 365, (float) 15, white);
+            invalidate();
 
 //        do {
 //            //tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
@@ -203,8 +208,15 @@ public class portraitView extends View {
 //        } while (altrue);
 
 
-        //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE THAT IS, WHEN BOTH X AND Y ARE 0
+            //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE THAT IS, WHEN BOTH X AND Y ARE 0
 
+        } else
+        {
+
+            canvas.drawCircle(width / (float) 2.0, width / (float) 2.0,  300, green);
+            canvas.translate(0, 0);
+            canvas.drawCircle(width / (float) 2.0, width / (float) 2.0, 50, white);
+        }
     }
 
     private void drawText(Canvas canvas, float i, float j) {
@@ -226,6 +238,12 @@ public class portraitView extends View {
             bigDecimal = bigDecimal.setScale(places, RoundingMode.HALF_UP);
             return bigDecimal.doubleValue();
         }
+
+    private double calcDeg(double round) {
+        double res;
+        res = 90 + round;
+        return res;
+    }
 
 
 
