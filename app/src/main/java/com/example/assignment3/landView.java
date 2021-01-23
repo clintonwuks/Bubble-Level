@@ -69,7 +69,7 @@ public class landView extends View {
         textp = new Paint();
         textp.setColor(0xFFFFFFFF);
         textp.setStyle(Paint.Style.FILL);
-        textp.setTextSize(35);
+        textp.setTextSize(30);
 
         white.setColor(0xFF7C7B7B);
         textPaint.setColor(0xFFFFFFFF);
@@ -125,9 +125,9 @@ public class landView extends View {
 //                                    canvas.drawText(text, sqrHeight, sqrHeight, textPaint);
 
 
-                                    Log.d("mytag2", "onSensorChanged: "+ orientation_values[0]
-                                            + " , " + orientation_values[1]
-                                            + " , " + orientation_values[2]);
+//                                    Log.d("mytag2", "onSensorChanged: "+ orientation_values[0]
+//                                            + " , " + orientation_values[1]
+//                                            + " , " + orientation_values[2]);
                                 }
                             }, sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
                 SensorManager.SENSOR_DELAY_UI);
@@ -144,7 +144,7 @@ public class landView extends View {
         width = maxheight;
         height = maxwidth;
         setMeasuredDimension(height, width);
-        Log.d("mylog", "onDraw: "+ width+" "+height );
+       // Log.d("mylog", "onDraw: "+ width+" "+height );
 
     }
 
@@ -203,21 +203,22 @@ public class landView extends View {
             // int deg =(int)calcDeg(round(Double.parseDouble(arrSTr[0]),2));
             // Log.d("mylog5", "onDraw: "+deg);
             //Log.d("mylog3", "onDraw: "+round(height/(float)2.22,2));
-            if (((int) round(Double.parseDouble(String.valueOf(orientation_values[0])), 1) < 80)) {
-                pitch = (height / (float) 2.22) + 80;
-                canvas.drawCircle((float) pitch, 240, (float) 15, white);
-                // Log.d("mytag3", "onDraw: "+pitch);
-                invalidate();
-            } else if (((int) round(Double.parseDouble(String.valueOf(orientation_values[0])), 1) > 100)) {
+//            if (((int) round(Double.parseDouble(String.valueOf(orientation_values[0])), 1) < 80)) {
+//                pitch = (height / (float) 2.22) + 80;
+//                canvas.drawCircle((float) pitch, 240, (float) 15, white);
+//                // Log.d("mytag3", "onDraw: "+pitch);
+//                invalidate();
+//            } else if (((int) round(Double.parseDouble(String.valueOf(orientation_values[0])), 1) > 100)) {
+//
+//                pitch = (height / (float) 2.22) + 100;
+//                canvas.drawCircle((float) pitch, 240, (float) 15, white);
+//                // Log.d("mytag3", "onDraw: "+round(pitch,2));
+//                invalidate();
+//            }
+            pitch = (float) Math.min((height / (float) 2.22)+100, pitch);
+    pitch = (float) Math.max((height / (float) 2.22) + 80, pitch);
 
-                pitch = (height / (float) 2.22) + 100;
-                canvas.drawCircle((float) pitch, 240, (float) 15, white);
-                // Log.d("mytag3", "onDraw: "+round(pitch,2));
-                invalidate();
-            }
-//    pitch = (float) Math.max(height/(float)2.06-MIN_DEGREE, pitch);
-//    pitch = (float) Math.min((height/(float)2.06)+20, pitch);
-            //  Log.d("mytag3", "onDraw: "+round(pitch,2));
+              //Log.d("mytag3", "onDraw: "+round(pitch,2));
             //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
             canvas.drawCircle((float) pitch, 240, (float) 15, white);
             text= ("X-axis : " + orientation_values[0]);
