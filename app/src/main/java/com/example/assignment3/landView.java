@@ -21,10 +21,10 @@ import java.math.RoundingMode;
 import static android.content.Context.SENSOR_SERVICE;
 
 public class landView extends View {
-    private Paint white, black, green;
+    private Paint white, black, green, textp;
     private Rect square;
     private int width, height;
-    private String text;
+    private String text, text1, text2;
     private TextView tv;
     private SensorManager sm;
     Paint textPaint;
@@ -36,6 +36,9 @@ public class landView extends View {
     private float rotation_matrix[] = new float[16];
     private float orientation_values[] = new float[4];
     private String[] arrSTr = new String[3];
+    private int count;
+    private int count2;
+
 
     static private final double GRAVITY = 9.81d;
     static private final double MIN_DEGREE = -10d;
@@ -63,6 +66,10 @@ public class landView extends View {
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         black = new Paint(Paint.ANTI_ALIAS_FLAG);
         green = new Paint(Paint.ANTI_ALIAS_FLAG);
+        textp = new Paint();
+        textp.setColor(0xFFFFFFFF);
+        textp.setStyle(Paint.Style.FILL);
+        textp.setTextSize(35);
 
         white.setColor(0xFF7C7B7B);
         textPaint.setColor(0xFFFFFFFF);
@@ -70,9 +77,11 @@ public class landView extends View {
         green.setColor(0xFF95DD42);
 
         mObj = new MainActivity();
-        bearingArr = mObj.getBearings();
-        pitchArr = mObj.getPitch();
-        rollArr = mObj.getRoll();
+//        bearingArr = mObj.getBearings();
+//        pitchArr = mObj.getPitch();
+//        rollArr = mObj.getRoll();
+        count= 500;
+        count2= 0;
 
 
 
@@ -92,10 +101,25 @@ public class landView extends View {
                                     orientation_values[2] = (float)
                                             Math.toDegrees(orientation_values[2]);
 
+                                    bearingArr[count2]=orientation_values[0];
+                                    pitchArr[count2]=orientation_values[1];
+                                    rollArr[count2]=orientation_values[2];
+
+                                    if (count2 == 499) {
+                                        count2 = 0;
+                                    } else {
+                                        count2++;
+                                    }
+
 //                                    text = tv.getText().toString();
-                                    text= (orientation_values[0]
-                                            + " , " + orientation_values[1]
-                                            + " , " + orientation_values[2]);
+//                                    text= (orientation_values[0]
+//                                            + " , " + orientation_values[1]
+//                                            + " , " + orientation_values[2]);
+
+//                                    text= (orientation_values[0]
+//                                            + " , " + orientation_values[1]
+//                                            + " , " + orientation_values[2]);
+
                                     invalidate();
 
 //                                    canvas.drawText(text, sqrHeight, sqrHeight, textPaint);
@@ -167,24 +191,24 @@ public class landView extends View {
         }
 
 //IF DEVICE IS FACING FRONT VIEW
-        if (calcDeg(orientation_values[2]) >= 90) {
+        if (calcDeg(orientation_values[2]) > 115 || (0 <= calcDeg(orientation_values[2]) && calcDeg(orientation_values[2]) <= 50)) {
             canvas.drawRect(height / (float) 2.5, (float) (250 - 10), height / (float) 1.7, (float) (250 + 10), black);
 
             //  canvas.drawCircle(375, 375, (float)3.0,textPaint);
             canvas.translate(0, 0);
-            arrSTr = text.split(",");
+         //   arrSTr = text.split(",");
             // drawText(canvas, sqrHeight, sqrHeight);
 
-            double pitch = height / (float) 2.22 + round(Double.parseDouble(arrSTr[0]), 6);
+            double pitch = height / (float) 2.22 + orientation_values[0];
             // int deg =(int)calcDeg(round(Double.parseDouble(arrSTr[0]),2));
             // Log.d("mylog5", "onDraw: "+deg);
             //Log.d("mylog3", "onDraw: "+round(height/(float)2.22,2));
-            if (((int) round(Double.parseDouble(arrSTr[0]), 1) < 80)) {
+            if (((int) round(Double.parseDouble(String.valueOf(orientation_values[0])), 1) < 80)) {
                 pitch = (height / (float) 2.22) + 80;
                 canvas.drawCircle((float) pitch, 240, (float) 15, white);
                 // Log.d("mytag3", "onDraw: "+pitch);
                 invalidate();
-            } else if (((int) round(Double.parseDouble(arrSTr[0]), 1) > 100)) {
+            } else if (((int) round(Double.parseDouble(String.valueOf(orientation_values[0])), 1) > 100)) {
 
                 pitch = (height / (float) 2.22) + 100;
                 canvas.drawCircle((float) pitch, 240, (float) 15, white);
@@ -196,25 +220,38 @@ public class landView extends View {
             //  Log.d("mytag3", "onDraw: "+round(pitch,2));
             //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
             canvas.drawCircle((float) pitch, 240, (float) 15, white);
+            text= ("X-axis : " + orientation_values[0]);
+            text1="Max Value : "+getBearingsmax();
+            text2= "Min Value : "+ getBearingsmin();
+
+            canvas.drawText(text, height/35, 240, textp);
+            canvas.drawText(text1, height/35, 200, textp);
+            canvas.drawText(text2, height/35, 170, textp);
             invalidate();
 
-//        do {
-//            //tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
-//            text = tv.getText().toString();
-//            canvas.drawText(text, sqrHeight, sqrHeight, textPaint);
-//            Log.d("mylog", "onDraw: "+text);
-//            invalidate();
-//        } while (altrue);
-
-
-            //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE THAT IS, WHEN BOTH X AND Y ARE 0
 
         }else
         {
+           // arrSTr = text.split(",");
+            double xarc = (height / (float) 2) + (orientation_values[1]);
+            double yarc = (width / (float) 2) -(orientation_values[2]);
+                    //(round(Double.parseDouble(arrSTr[2]), 1))-90.0;
 
-            canvas.drawCircle(height / (float) 2, width / (float) 2.0,  300, green);
+            canvas.drawCircle(height / (float) 2.0, width / (float) 2.0,  300, green);
             canvas.translate(0, 0);
-            canvas.drawCircle(height / (float) 2.0, width / (float) 2.0, 50, white);
+            canvas.drawCircle((float)xarc, (float)yarc, 50, white);
+
+            text= ("X-axis : " + orientation_values[1] + " \t\t\tY-axis :  " + orientation_values[2]);
+            text1= ("X-axis Max Value : "+getPitchmax() + "\t\t\tX-axis Min Value : "+ getPitchmin());
+            text2=("Y-axis Max Value: "+getRollmax() + "\t\t\tY-axis Min Value : "+ getRollmin());
+            // text2= "Min Value : "+ getRollmin();
+
+            canvas.drawText(text, height/35, 50, textp);
+            canvas.drawText(text1, height/35, 100, textp);
+            canvas.drawText(text2, height/35, 150, textp);
+
+            invalidate();
+           // Log.d("mytag3", "onDraw: "+round(height / (float) 2.0,3)+" " +round(width / (float) 2.0,3));
         }
 
 }
@@ -243,6 +280,65 @@ public class landView extends View {
         BigDecimal bigDecimal = new BigDecimal(val);
         bigDecimal = bigDecimal.setScale(places, RoundingMode.HALF_UP);
         return bigDecimal.doubleValue();
+    }
+
+    public float getBearingsmax(){
+        //float[] bearings = new float[500];
+        float bmax=getmax(bearingArr);
+        return bmax;
+    }
+
+    public float getPitchmax(){
+        //float[] pitch = new float[500];
+        float pmax=getmax(pitchArr);
+        return pmax;
+    }
+
+    public float getRollmax(){
+        //float[] bearings = new float[500];
+        float rmax=getmax(rollArr);
+        return rmax;
+    }
+
+    public float getBearingsmin(){
+        //float[] bearings = new float[500];
+        float bmin=getmin(bearingArr);
+        return bmin;
+    }
+
+    public float getPitchmin(){
+        //float[] pitch = new float[500];
+        float pmin=getmin(pitchArr);
+        return pmin;
+    }
+
+    public float getRollmin(){
+        //float[] bearings = new float[500];
+        float rmin=getmin(rollArr);
+        return rmin;
+    }
+
+
+    public float getmax(float [] array) {
+        float max = 0;
+
+        for(int i=0; i<array.length; i++ ) {
+            if(array[i]>max) {
+                max = array[i];
+            }
+        }
+        return max;
+    }
+
+    public float getmin(float [] array) {
+        float min = 0;
+
+        for(int i=0; i<array.length; i++ ) {
+            if(array[i]<min) {
+                min = array[i];
+            }
+        }
+        return min;
     }
 
 

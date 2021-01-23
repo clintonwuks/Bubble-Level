@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 // attach a sensor to the rotation vector
 
-        Configuration c = getResources().getConfiguration();
+       // Configuration c = getResources().getConfiguration();
 
 
 
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                                         pitch[count2]=orientation_values[1];
                                         roll[count2]=orientation_values[2];
 
-                                    Log.d("TAG", "onSensorChanged: for" + count2 +bearings[count2]+" , "+ pitch[count2]+" , "+roll[count2]);
+                                   // Log.d("mynewTAG", "onSensorChanged: for" + count2 );
 
                                         if (count2 == 499) {
                                             count2 = 0;
@@ -84,21 +84,64 @@ public class MainActivity extends AppCompatActivity {
                 SensorManager.SENSOR_DELAY_UI);
     }
 
-    public float[] getBearings(){
+    public float getBearingsmax(){
          //float[] bearings = new float[500];
-        return bearings.clone();
+        float bmax=getmax(bearings);
+        return bmax;
     }
 
-    public float[] getPitch(){
+    public float getPitchmax(){
         //float[] pitch = new float[500];
-        return pitch.clone();
+        float pmax=getmax(pitch);
+        return pmax;
     }
 
-    public float[] getRoll(){
+    public float getRollmax(){
         //float[] bearings = new float[500];
-        return roll.clone();
+        float rmax=getmax(roll);
+        return rmax;
     }
 
+    public float getBearingsmin(){
+        //float[] bearings = new float[500];
+        float bmin=getmin(bearings);
+        return bmin;
+    }
+
+    public float getPitchmin(){
+        //float[] pitch = new float[500];
+        float pmin=getmin(pitch);
+        return pmin;
+    }
+
+    public float getRollmin(){
+        //float[] bearings = new float[500];
+        float rmin=getmin(roll);
+        return rmin;
+    }
+
+
+    public float getmax(float [] array) {
+        float max = 0;
+
+        for(int i=0; i<array.length; i++ ) {
+            if(array[i]>max) {
+                max = array[i];
+            }
+        }
+        return max;
+    }
+
+    public float getmin(float [] array) {
+        float min = 0;
+
+        for(int i=0; i<array.length; i++ ) {
+            if(array[i]<min) {
+                min = array[i];
+            }
+        }
+        return min;
+    }
 
 
 }
