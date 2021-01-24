@@ -14,7 +14,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     // private fields of the class
-    private TextView tv;
+   // private TextView tv;
     private SensorManager sm;
     private float rotation_matrix[] = new float[16];
     private float orientation_values[] = new float[4];
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // get access to the text view and the sensor manager
-        tv = (TextView) findViewById(R.id.tv);
+       // tv = (TextView) findViewById(R.id.tv);
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 // attach a sensor to the rotation vector
 
@@ -69,11 +69,11 @@ public class MainActivity extends AppCompatActivity {
                                             count2++;
                                         }
 
-                                   // }
-                                    tv.setText(
-                                            orientation_values[0]
-                                                    + " , " + orientation_values[1]
-                                                    + " , " + orientation_values[2]);
+//                                   // }
+//                                    tv.setText(
+//                                            orientation_values[0]
+//                                                    + " , " + orientation_values[1]
+//                                                    + " , " + orientation_values[2]);
                                 }
 
                                 //call invalidate from the other class

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -21,7 +22,7 @@ import java.math.RoundingMode;
 import static android.content.Context.SENSOR_SERVICE;
 
 public class landView extends View {
-    private Paint white, black, green, textp;
+    private Paint white, black, green, textp, line;
     private Rect square;
     private int width, height;
     private String text, text1, text2;
@@ -38,6 +39,7 @@ public class landView extends View {
     private String[] arrSTr = new String[3];
     private int count;
     private int count2;
+    private Path path;
 
 
     static private final double GRAVITY = 9.81d;
@@ -66,14 +68,18 @@ public class landView extends View {
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         black = new Paint(Paint.ANTI_ALIAS_FLAG);
         green = new Paint(Paint.ANTI_ALIAS_FLAG);
+        line = new Paint();
         textp = new Paint();
         textp.setColor(0xFFFFFFFF);
         textp.setStyle(Paint.Style.FILL);
         textp.setTextSize(30);
 
         white.setColor(0xFF7C7B7B);
+        line.setStrokeWidth(5f);
+        line.setColor(0xFF7C7B7B);
         textPaint.setColor(0xFFFFFFFF);
         black.setColor(0xFF000000);
+        black.setStyle(Paint.Style.FILL_AND_STROKE);
         green.setColor(0xFF95DD42);
 
         mObj = new MainActivity();
@@ -82,10 +88,11 @@ public class landView extends View {
 //        rollArr = mObj.getRoll();
         count= 500;
         count2= 0;
+        path = new Path();
 
 
 
-        tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
+//        tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
         sm = (SensorManager) ((Activity) getContext()).getSystemService(SENSOR_SERVICE);
         sm.registerListener(new SensorEventListener() {
                                 public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -238,9 +245,38 @@ public class landView extends View {
             double yarc = (width / (float) 2) -(orientation_values[2]);
                     //(round(Double.parseDouble(arrSTr[2]), 1))-90.0;
 
+            double northx ;
+            double northy ;
+            if (orientation_values[0] < 0){
+
+                northx = (height / (float) 2) + (round((orientation_values[0]),1)*10);
+                northy = ((width / (float) 20))- ((orientation_values[0])*5);
+            }
+            else {
+                northx = (height / (float) 2) + (round((orientation_values[0]),1)*10);
+                //  northy=240;
+                northy = ((width / (float) 20))+ (orientation_values[0])*10;
+            }
+
+
             canvas.drawCircle(height / (float) 2.0, width / (float) 2.0,  300, green);
+            canvas.drawCircle(height / (float) 2.0, width / (float) 2.0,  75, black);
+          //  canvas.drawLine(height / (float) 3, width / (float) 2.0, (height / (float) 2.0)+20, (width / (float) 2.0)+20, line);
+            canvas.drawLine(height / (float) 2.0, width / (float) 2.4, height / (float) 2,  width / (float) 1.7 , line);
+            canvas.drawLine((height / (float) 2.0)-70, (width / (float) 2.5)+70, (height / (float) 2.0)+70,  (width / (float) 2.5)+70 , line);
+
+            // path.lineTo(height,width);
             canvas.translate(0, 0);
             canvas.drawCircle((float)xarc, (float)yarc, 50, white);
+
+
+
+            //988.5 34
+            //978 344 arrow east
+            canvas.drawLine(height / (float) 2.0, width / (float) 2.0,// arrow east
+//                    (float)1388,  344 , line);
+                    (float)northx,  (float)northy , line);
+            Log.d("mytag5", "stopx amd stopy : "+ ((height / (float) 2.0))+" , " +width / (float) 20);
 
             text= ("X-axis : " + orientation_values[1] + " \t\t\tY-axis :  " + orientation_values[2]);
             text1= ("X-axis Max Value : "+getPitchmax() + "\t\t\tX-axis Min Value : "+ getPitchmin());

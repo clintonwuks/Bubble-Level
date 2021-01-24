@@ -26,7 +26,7 @@ import java.math.RoundingMode;
 import static android.content.Context.SENSOR_SERVICE;
 
 public class portraitView extends View {
-    private Paint white, black, green, textp;
+    private Paint white, black, green, textp, line;
     private Rect square;
     private int width, height;
     private String text,text1,text2;
@@ -74,12 +74,16 @@ public class portraitView extends View {
         black = new Paint(Paint.ANTI_ALIAS_FLAG);
         green = new Paint(Paint.ANTI_ALIAS_FLAG);
         textp = new Paint();
+        line = new Paint();
         textp.setColor(0xFFFFFFFF);
         textp.setStyle(Paint.Style.FILL);
          textp.setTextSize(35);
+        line.setStrokeWidth(5f);
+        line.setColor(0xFF7C7B7B);
         white.setColor(0xFF7C7B7B);
         textPaint.setColor(0xFFFFFFFF);
         black.setColor(0xFF000000);
+        black.setStyle(Paint.Style.FILL_AND_STROKE);
         green.setColor(0xFF95DD42);
 
         mObj = new MainActivity();
@@ -91,7 +95,7 @@ public class portraitView extends View {
 
 
 
-        tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
+      //  tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
         sm = (SensorManager) ((Activity) getContext()).getSystemService(SENSOR_SERVICE);
         sm.registerListener(new SensorEventListener() {
                                 public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -253,8 +257,22 @@ public class portraitView extends View {
 
         } else
         {
+            //USE THE LAST ORIENTATION VALUE TO DETERMINE AZIMUTH MAGNETIC NORTH
             double xarc = (width / (float) 2) - (orientation_values[2]);
             double yarc = (width / (float) 2) +(orientation_values[1]);
+
+            double northx ;
+            double northy ;
+            if (orientation_values[0] < 0){
+
+                 northx = (width / (float) 2) + (round((orientation_values[0]),6)*10);
+                 northy = ((width / (float) 2) -500 )- (orientation_values[0]*10);
+            }
+            else {
+                northx = (width / (float) 2) + (round((orientation_values[0]),6)*10);
+              //  northy=240;
+                northy = ((width / (float) 2) -300 )+ (orientation_values[0])*10;
+            }
 
 //            canvas.drawCircle(width / (float) 2.0, width / (float) 2.0,  300, green);
 //            canvas.translate(0, 0);
@@ -267,8 +285,19 @@ public class portraitView extends View {
             //(round(Double.parseDouble(arrSTr[2]), 1))-90.0;
 
             canvas.drawCircle(width / (float) 2.0, width / (float) 2.0,  300, green);
+            canvas.drawCircle(width / (float) 2.0, width / (float) 2.0,  75, black);
+            canvas.drawLine(width / (float) 2.0, width / (float) 2.3, width / (float) 2,  width / (float) 1.8 , line);
+            canvas.drawLine((width / (float) 2.0)-60, (width / (float) 2.3)+70, (width / (float) 2.0)+65,  (width / (float) 2.5)+105 , line);
             canvas.translate(0, 0);
             canvas.drawCircle((float)xarc, (float)yarc, 50, white);
+
+            //canvas.drawText("N", height/35, width-20, textp);
+            //started with x 540 y 240 //arrow top
+//            canvas.drawLine(800, 700, 240, 540 // arrow west
+            canvas.drawLine((float) northx, (float)northy,// arrow east
+                    width / (float) 2.0,  width / (float) 2.0 , line);
+            Log.d("mytag5", "startX: "+ ((width / (float) 2.0)-60));
+
 
             text= ("X-axis : " + orientation_values[2] + " \t\t\tY-axis :  " + orientation_values[1]);
             text1= ("X-axis Max Value : "+getRollmax() + "\t\t\tX-axis Min Value : "+ getRollmin());
@@ -278,6 +307,7 @@ public class portraitView extends View {
             canvas.drawText(text, height/35, width-85, textp);
             canvas.drawText(text1, height/35, width-50, textp);
             canvas.drawText(text2, height/35, width-20, textp);
+
 
             invalidate();
 
