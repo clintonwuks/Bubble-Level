@@ -180,7 +180,8 @@ public class portraitView extends View {
 
         if (calcDeg(orientation_values[1]) < 60) {
 
-            canvas.drawRect(width / (float) 2.85, (float) (375 - 10), width / (float) 1.5, (float) (375 + 10), black);
+            canvas.drawRect(width / (float) 2.85, (float) (375 - 10),
+                    width / (float) 1.5, (float) (375 + 10), black);
 
             canvas.translate(0, 0);
 
@@ -205,13 +206,15 @@ public class portraitView extends View {
 
         } else
         {
+            //LOGIC TO MOVE THE BUBBLE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
+
             double xarc = (width / (float) 2) - (orientation_values[2]);
             double yarc = (width / (float) 2) +(orientation_values[1]);
 
             double northx ;
             double northy ;
 
-            //LOGIC TO MOVE THE BUBBLE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
+            //LOGIC TO MOVE THE NORTH LINE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
             if (orientation_values[0] < 0){
 
                  northx = (width / (float) 2) + (round((orientation_values[0]),6)*10);
@@ -238,8 +241,6 @@ public class portraitView extends View {
 
             canvas.drawLine((float) northx, (float)northy,// arrow east
                     width / (float) 2.0,  width / (float) 2.0 , line);
-            Log.d("mytag5", "startX: "+ ((width / (float) 2.0)-60));
-
 
             text= ("X-axis : " + orientation_values[2] + " \t\t\tY-axis :  " + orientation_values[1]);
             text1= ("X-axis Max Value : "+getRollmax() + "\t\t\tX-axis Min Value : "+ getRollmin());
@@ -266,12 +267,12 @@ public class portraitView extends View {
 
 
 
-        public static double round(double val, int places){
-            if(places < 0) throw new IllegalArgumentException();
+        public static double round(double val, int place){
+            if(place < 0) throw new IllegalArgumentException();
 
-            BigDecimal bigDecimal = new BigDecimal(val);
-            bigDecimal = bigDecimal.setScale(places, RoundingMode.HALF_UP);
-            return bigDecimal.doubleValue();
+            BigDecimal bd = new BigDecimal(val);
+            bd = bd.setScale(place, RoundingMode.HALF_UP);
+            return bd.doubleValue();
         }
 
     private double calcDeg(double round) {
@@ -280,10 +281,6 @@ public class portraitView extends View {
         return res;
     }
 
-    public float getBearingsmax(){
-        float bmax=getmax(bearings);
-        return bmax;
-    }
 
     public float getPitchmax(){
         float pmax=getmax(pitch);
@@ -295,10 +292,6 @@ public class portraitView extends View {
         return rmax;
     }
 
-    public float getBearingsmin(){
-        float bmin=getmin(bearings);
-        return bmin;
-    }
 
     public float getPitchmin(){
         float pmin=getmin(pitch);

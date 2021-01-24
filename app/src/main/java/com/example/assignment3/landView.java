@@ -205,13 +205,15 @@ public class landView extends View {
         }else             //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE
 
         {
+            //LOGIC TO MOVE THE BUBBLE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
+
             double xarc = (height / (float) 2) + (orientation_values[1]);
             double yarc = (width / (float) 2) -(orientation_values[2]);
 
             double northx ;
             double northy ;
 
-            //LOGIC TO MOVE THE BUBBLE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
+            //LOGIC TO MOVE THE NORTH LINE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
 
             if (orientation_values[0] < 0){
 
@@ -220,7 +222,6 @@ public class landView extends View {
             }
             else {
                 northx = (height / (float) 2) + (round((orientation_values[0]),1)*10);
-                //  northy=240;
                 northy = ((width / (float) 20))+ (orientation_values[0])*10;
             }
 
@@ -275,18 +276,14 @@ public class landView extends View {
 
 
 
-    public static double round(double val, int places){
-        if(places < 0) throw new IllegalArgumentException();
+    public static double round(double val, int place){
+        if(place < 0) throw new IllegalArgumentException();
 
-        BigDecimal bigDecimal = new BigDecimal(val);
-        bigDecimal = bigDecimal.setScale(places, RoundingMode.HALF_UP);
-        return bigDecimal.doubleValue();
+        BigDecimal bd = new BigDecimal(val);
+        bd = bd.setScale(place, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
-    public float getBearingsmax(){
-        float bmax=getmax(bearingArr);
-        return bmax;
-    }
 
     public float getPitchmax(){
         float pmax=getmax(pitchArr);
@@ -298,10 +295,6 @@ public class landView extends View {
         return rmax;
     }
 
-    public float getBearingsmin(){
-        float bmin=getmin(bearingArr);
-        return bmin;
-    }
 
     public float getPitchmin(){
         float pmin=getmin(pitchArr);
