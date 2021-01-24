@@ -63,7 +63,7 @@ public class landView extends View {
     }
 
     private void init(){
-        //create paint object
+        //INITIALISE VARIABLES AND SENSOR MANAGER
         white = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         black = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -83,16 +83,11 @@ public class landView extends View {
         green.setColor(0xFF95DD42);
 
         mObj = new MainActivity();
-//        bearingArr = mObj.getBearings();
-//        pitchArr = mObj.getPitch();
-//        rollArr = mObj.getRoll();
+
         count= 500;
         count2= 0;
         path = new Path();
 
-
-
-//        tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
         sm = (SensorManager) ((Activity) getContext()).getSystemService(SENSOR_SERVICE);
         sm.registerListener(new SensorEventListener() {
                                 public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -118,23 +113,8 @@ public class landView extends View {
                                         count2++;
                                     }
 
-//                                    text = tv.getText().toString();
-//                                    text= (orientation_values[0]
-//                                            + " , " + orientation_values[1]
-//                                            + " , " + orientation_values[2]);
-
-//                                    text= (orientation_values[0]
-//                                            + " , " + orientation_values[1]
-//                                            + " , " + orientation_values[2]);
-
                                     invalidate();
 
-//                                    canvas.drawText(text, sqrHeight, sqrHeight, textPaint);
-
-
-//                                    Log.d("mytag2", "onSensorChanged: "+ orientation_values[0]
-//                                            + " , " + orientation_values[1]
-//                                            + " , " + orientation_values[2]);
                                 }
                             }, sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
                 SensorManager.SENSOR_DELAY_UI);
@@ -157,10 +137,11 @@ public class landView extends View {
 
     public void onDraw(Canvas canvas) {
 
+        //DRAW GREY BACKGROUND
+
         int sqrHeight = width / 8;
         int sqrWidth = height / 8;
-        // this.canvas = canvas;
-        // call the superclass method
+
         super.onDraw(canvas);
 
         for (int i = 0; i < 16; i++) {
@@ -201,36 +182,19 @@ public class landView extends View {
         if (calcDeg(orientation_values[2]) > 115 || (0 <= calcDeg(orientation_values[2]) && calcDeg(orientation_values[2]) <= 50)) {
             canvas.drawRect(height / (float) 2.5, (float) (250 - 10), height / (float) 1.7, (float) (250 + 10), black);
 
-            //  canvas.drawCircle(375, 375, (float)3.0,textPaint);
             canvas.translate(0, 0);
-         //   arrSTr = text.split(",");
-            // drawText(canvas, sqrHeight, sqrHeight);
 
-            double pitch = height / (float) 2.22 + orientation_values[0];
-            // int deg =(int)calcDeg(round(Double.parseDouble(arrSTr[0]),2));
-            // Log.d("mylog5", "onDraw: "+deg);
-            //Log.d("mylog3", "onDraw: "+round(height/(float)2.22,2));
-//            if (((int) round(Double.parseDouble(String.valueOf(orientation_values[0])), 1) < 80)) {
-//                pitch = (height / (float) 2.22) + 80;
-//                canvas.drawCircle((float) pitch, 240, (float) 15, white);
-//                // Log.d("mytag3", "onDraw: "+pitch);
-//                invalidate();
-//            } else if (((int) round(Double.parseDouble(String.valueOf(orientation_values[0])), 1) > 100)) {
-//
-//                pitch = (height / (float) 2.22) + 100;
-//                canvas.drawCircle((float) pitch, 240, (float) 15, white);
-//                // Log.d("mytag3", "onDraw: "+round(pitch,2));
-//                invalidate();
-//            }
+
+            double pitch = height / (float) 2.22 + calcDeg(orientation_values[1]);
+
             pitch = (float) Math.min((height / (float) 2.22)+100, pitch);
     pitch = (float) Math.max((height / (float) 2.22) + 80, pitch);
 
-              //Log.d("mytag3", "onDraw: "+round(pitch,2));
-            //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
+
             canvas.drawCircle((float) pitch, 240, (float) 15, white);
-            text= ("X-axis : " + orientation_values[0]);
-            text1="Max Value : "+getBearingsmax();
-            text2= "Min Value : "+ getBearingsmin();
+            text= ("X-axis : " + orientation_values[1]);
+            text1="Max Value : "+getPitchmax();
+            text2= "Min Value : "+ getPitchmin();
 
             canvas.drawText(text, height/35, 240, textp);
             canvas.drawText(text1, height/35, 200, textp);
@@ -238,15 +202,17 @@ public class landView extends View {
             invalidate();
 
 
-        }else
+        }else             //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE
+
         {
-           // arrSTr = text.split(",");
             double xarc = (height / (float) 2) + (orientation_values[1]);
             double yarc = (width / (float) 2) -(orientation_values[2]);
-                    //(round(Double.parseDouble(arrSTr[2]), 1))-90.0;
 
             double northx ;
             double northy ;
+
+            //LOGIC TO MOVE THE BUBBLE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
+
             if (orientation_values[0] < 0){
 
                 northx = (height / (float) 2) + (round((orientation_values[0]),1)*10);
@@ -259,36 +225,34 @@ public class landView extends View {
             }
 
 
+            //DRAW THE OUTER AND INNER CIRCLES WITH THE MID POINT AND NORTH LINE
             canvas.drawCircle(height / (float) 2.0, width / (float) 2.0,  300, green);
             canvas.drawCircle(height / (float) 2.0, width / (float) 2.0,  75, black);
-          //  canvas.drawLine(height / (float) 3, width / (float) 2.0, (height / (float) 2.0)+20, (width / (float) 2.0)+20, line);
             canvas.drawLine(height / (float) 2.0, width / (float) 2.4, height / (float) 2,  width / (float) 1.7 , line);
-            canvas.drawLine((height / (float) 2.0)-70, (width / (float) 2.5)+70, (height / (float) 2.0)+70,  (width / (float) 2.5)+70 , line);
+            canvas.drawLine((height / (float) 2.1), (width / (float) 2.0), (height / (float) 1.9),  (width / (float) 2.0) , line);
 
-            // path.lineTo(height,width);
             canvas.translate(0, 0);
+
+            //LOGIC TO MOVE THE BUBBLE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
+
             canvas.drawCircle((float)xarc, (float)yarc, 50, white);
+            //LOGIC TO MOVE THE NORTH LINE BASED ON THE ORIENTATION VALUE FOR THE BEARING
 
 
-
-            //988.5 34
-            //978 344 arrow east
-            canvas.drawLine(height / (float) 2.0, width / (float) 2.0,// arrow east
-//                    (float)1388,  344 , line);
+            canvas.drawLine(height / (float) 2.0, width / (float) 2.0,
                     (float)northx,  (float)northy , line);
             Log.d("mytag5", "stopx amd stopy : "+ ((height / (float) 2.0))+" , " +width / (float) 20);
 
             text= ("X-axis : " + orientation_values[1] + " \t\t\tY-axis :  " + orientation_values[2]);
             text1= ("X-axis Max Value : "+getPitchmax() + "\t\t\tX-axis Min Value : "+ getPitchmin());
             text2=("Y-axis Max Value: "+getRollmax() + "\t\t\tY-axis Min Value : "+ getRollmin());
-            // text2= "Min Value : "+ getRollmin();
+
 
             canvas.drawText(text, height/35, 50, textp);
             canvas.drawText(text1, height/35, 100, textp);
             canvas.drawText(text2, height/35, 150, textp);
 
             invalidate();
-           // Log.d("mytag3", "onDraw: "+round(height / (float) 2.0,3)+" " +round(width / (float) 2.0,3));
         }
 
 }
@@ -320,37 +284,31 @@ public class landView extends View {
     }
 
     public float getBearingsmax(){
-        //float[] bearings = new float[500];
         float bmax=getmax(bearingArr);
         return bmax;
     }
 
     public float getPitchmax(){
-        //float[] pitch = new float[500];
         float pmax=getmax(pitchArr);
         return pmax;
     }
 
     public float getRollmax(){
-        //float[] bearings = new float[500];
         float rmax=getmax(rollArr);
         return rmax;
     }
 
     public float getBearingsmin(){
-        //float[] bearings = new float[500];
         float bmin=getmin(bearingArr);
         return bmin;
     }
 
     public float getPitchmin(){
-        //float[] pitch = new float[500];
         float pmin=getmin(pitchArr);
         return pmin;
     }
 
     public float getRollmin(){
-        //float[] bearings = new float[500];
         float rmin=getmin(rollArr);
         return rmin;
     }

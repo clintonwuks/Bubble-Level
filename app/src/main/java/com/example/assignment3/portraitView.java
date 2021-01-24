@@ -1,5 +1,6 @@
 package com.example.assignment3;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -68,7 +69,7 @@ public class portraitView extends View {
     }
 
     private void init(){
-        //create paint object
+        //INITIALISE VARIABLES AND SENSOR MANAGER
         white = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         black = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -87,15 +88,10 @@ public class portraitView extends View {
         green.setColor(0xFF95DD42);
 
         mObj = new MainActivity();
-//        bearingArr = mObj.getBearings();
-//        pitchArr = mObj.getPitch();
-//        rollArr = mObj.getRoll();
+
         count= 500;
         count2= 0;
 
-
-
-      //  tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
         sm = (SensorManager) ((Activity) getContext()).getSystemService(SENSOR_SERVICE);
         sm.registerListener(new SensorEventListener() {
                                 public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -115,29 +111,14 @@ public class portraitView extends View {
                                     pitch[count2]=orientation_values[1];
                                     roll[count2]=orientation_values[2];
 
-                                    // Log.d("mynewTAG", "onSensorChanged: for" + count2 );
-
                                     if (count2 == 499) {
                                         count2 = 0;
                                     } else {
                                         count2++;
                                     }
 
-//                                    text = tv.getText().toString();
-
-                                   // tv.setText(""+orientation_values[2]);
-
-                                    //Log.d("mynewlog", "onSensorChanged: "+count2);
-
-
                                     invalidate();
 
-//                                    canvas.drawText(text, sqrHeight, sqrHeight, textPaint);
-
-
-                                    Log.d("mytag2", "onSensorChanged: "+ orientation_values[0]
-                                            + " , " + orientation_values[1]
-                                            + " , " + orientation_values[2]);
                                 }
                             }, sm.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
                 SensorManager.SENSOR_DELAY_UI);
@@ -161,27 +142,15 @@ public class portraitView extends View {
 
         int sqrHeight = width / 8;
         int sqrWidth = height / 8;
-       // Log.d("sqrtings", "onDraw: "+ sqrHeight);
 
-
-       // this.canvas = canvas;
-        // call the superclass method
-
-
-
-
-       // canvas.drawCircle(375, 375, 5,textPaint);
-//       text = tv.getText().toString();
         super.onDraw(canvas);
+        //DRAW GREY BACKGROUND
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
 
                 if (i % 2 == 0) {
                     if (j % 2 == 0) {
-//                            square = new Rect(i * sqrWidth, j *
-//                                    sqrHeight, (i + 1) * sqrWidth, (j +
-//                                    1) * sqrHeight);
 
                         canvas.drawRect(i * sqrWidth, j * sqrHeight, (i + 1) * sqrWidth, (j + 1) * sqrHeight, white);
 
@@ -208,32 +177,19 @@ public class portraitView extends View {
             }
         }
 //IF DEVICE IS FACING FRONT VIEW
-      //  canvas.drawRect(250,(float)(375-10),485,(float)(375+10),black);
+
         if (calcDeg(orientation_values[1]) < 60) {
 
-           // .toString();
-
-
-
-
             canvas.drawRect(width / (float) 2.85, (float) (375 - 10), width / (float) 1.5, (float) (375 + 10), black);
-            //Log.d("mylog2", "onDraw: "+width/(float)2.85);
 
-            //  canvas.drawCircle(375, 375, (float)3.0,textPaint);
             canvas.translate(0, 0);
-          //  arrSTr = text.split(",");
-            // drawText(canvas, sqrHeight, sqrHeight);
-            //Log.d("mylog", "onDraw: "+ width+" "+height );
+
 
             double pitch = width / (float) 2 - orientation_values[2];
-            // Log.d("mylog4", "onDraw: "+width/(float)2);
             pitch = (float) Math.max(MIN_DEGREE + (width / (float) 2), pitch);
             pitch = (float) Math.min((width / (float) 2) + MAX_DEGREE, pitch);
-            // Log.d("mytag3", "onDraw: "+pitch);
-            //canvas.drawText(text, (float)((sqrHeight*Float.parseFloat(arrSTr[1]))/MIN_DEGREE), (float)((sqrHeight*Float.parseFloat(arrSTr[0]))/MAX_DEGREE), textPaint);
             canvas.drawCircle((float) pitch, 365, (float) 15, white);
 
-            //text= ();
 
             text= ("X-axis : " + orientation_values[2]);
              text1="Max Value : "+getRollmax();
@@ -244,25 +200,18 @@ public class portraitView extends View {
             canvas.drawText(text2, height/35, width-20, textp);
             invalidate();
 
-//        do {
-//            //tv = (TextView) ((Activity) getContext()).findViewById(R.id.tv);
-//            text = tv.getText().toString();
-//            canvas.drawText(text, sqrHeight, sqrHeight, textPaint);
-//            Log.d("mylog", "onDraw: "+text);
-//            invalidate();
-//        } while (altrue);
 
-
-            //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE THAT IS, WHEN BOTH X AND Y ARE 0
+            //AN ELSE FOR WHEN THW VALUE IS ON A FLAT SURFACE
 
         } else
         {
-            //USE THE LAST ORIENTATION VALUE TO DETERMINE AZIMUTH MAGNETIC NORTH
             double xarc = (width / (float) 2) - (orientation_values[2]);
             double yarc = (width / (float) 2) +(orientation_values[1]);
 
             double northx ;
             double northy ;
+
+            //LOGIC TO MOVE THE BUBBLE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
             if (orientation_values[0] < 0){
 
                  northx = (width / (float) 2) + (round((orientation_values[0]),6)*10);
@@ -274,26 +223,19 @@ public class portraitView extends View {
                 northy = ((width / (float) 2) -300 )+ (orientation_values[0])*10;
             }
 
-//            canvas.drawCircle(width / (float) 2.0, width / (float) 2.0,  300, green);
-//            canvas.translate(0, 0);
-//            canvas.drawCircle(width / (float) 2.0, width / (float) 2.0, 50, white);
 
-
-
-
-
-            //(round(Double.parseDouble(arrSTr[2]), 1))-90.0;
-
+//DRAW THE OUTER AND INNER CIRCLES WITH THE MID POINT AND NORTH LINE
             canvas.drawCircle(width / (float) 2.0, width / (float) 2.0,  300, green);
             canvas.drawCircle(width / (float) 2.0, width / (float) 2.0,  75, black);
             canvas.drawLine(width / (float) 2.0, width / (float) 2.3, width / (float) 2,  width / (float) 1.8 , line);
-            canvas.drawLine((width / (float) 2.0)-60, (width / (float) 2.3)+70, (width / (float) 2.0)+65,  (width / (float) 2.5)+105 , line);
+            canvas.drawLine((width / (float) 2.3), (width / (float) 2.0), (width / (float) 1.75),  (width / (float) 2.0) , line);
             canvas.translate(0, 0);
+            //LOGIC TO MOVE THE BUBBLE BASED ON THE ORIENTATION VALUE THAT RESPONDS TO SELECTED MOVEMENTS
+
             canvas.drawCircle((float)xarc, (float)yarc, 50, white);
 
-            //canvas.drawText("N", height/35, width-20, textp);
-            //started with x 540 y 240 //arrow top
-//            canvas.drawLine(800, 700, 240, 540 // arrow west
+            //LOGIC TO MOVE THE NORTH LINE BASED ON THE ORIENTATION VALUE FOR THE BEARING
+
             canvas.drawLine((float) northx, (float)northy,// arrow east
                     width / (float) 2.0,  width / (float) 2.0 , line);
             Log.d("mytag5", "startX: "+ ((width / (float) 2.0)-60));
@@ -302,7 +244,6 @@ public class portraitView extends View {
             text= ("X-axis : " + orientation_values[2] + " \t\t\tY-axis :  " + orientation_values[1]);
             text1= ("X-axis Max Value : "+getRollmax() + "\t\t\tX-axis Min Value : "+ getRollmin());
             text2=("Y-axis Max Value: "+getPitchmax() + "\t\t\tY-axis Min Value : "+ getPitchmin());
-           // text2= "Min Value : "+ getRollmin();
 
             canvas.drawText(text, height/35, width-85, textp);
             canvas.drawText(text1, height/35, width-50, textp);
@@ -316,11 +257,8 @@ public class portraitView extends View {
         }
     }
 
-    private void drawText(Canvas canvas, float i, float j) {
-        canvas.drawText(text, i, j, textPaint);
-        invalidate();
-    }
 
+    @SuppressLint("ClickableViewAccessibility")
     public boolean onTouchEvent(MotionEvent event) {
 
         return super.onTouchEvent(event);
@@ -343,37 +281,31 @@ public class portraitView extends View {
     }
 
     public float getBearingsmax(){
-        //float[] bearings = new float[500];
         float bmax=getmax(bearings);
         return bmax;
     }
 
     public float getPitchmax(){
-        //float[] pitch = new float[500];
         float pmax=getmax(pitch);
         return pmax;
     }
 
     public float getRollmax(){
-        //float[] bearings = new float[500];
         float rmax=getmax(roll);
         return rmax;
     }
 
     public float getBearingsmin(){
-        //float[] bearings = new float[500];
         float bmin=getmin(bearings);
         return bmin;
     }
 
     public float getPitchmin(){
-        //float[] pitch = new float[500];
         float pmin=getmin(pitch);
         return pmin;
     }
 
     public float getRollmin(){
-        //float[] bearings = new float[500];
         float rmin=getmin(roll);
         return rmin;
     }
