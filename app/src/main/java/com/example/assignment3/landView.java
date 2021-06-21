@@ -178,7 +178,7 @@ public class landView extends View {
             }
         }
 
-//IF DEVICE IS FACING FRONT VIEW
+//IF DEVICE IS FACING FRONT VIEW / y axis
         if (calcDeg(orientation_values[2]) > 115 || (0 <= calcDeg(orientation_values[2]) && calcDeg(orientation_values[2]) <= 50)) {
             canvas.drawRect(height / (float) 2.5, (float) (250 - 10), height / (float) 1.7, (float) (250 + 10), black);
 
